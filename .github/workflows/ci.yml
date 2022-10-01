@@ -55,4 +55,4 @@ jobs:
           ./setup_test_cache $CRDS_TEST_ROOT
       - name: Run tests
         shell: bash -l {0}
-        run: ./runtests --cover
+        run: ./runtests
