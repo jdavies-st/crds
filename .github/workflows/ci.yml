@@ -35,18 +35,17 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install fitsverify
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          activate-environment: crds
+      - name: Bash
+        shell: bash -l {0}
         run: |
-          wget --quiet --output-document - http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz | tar -xz -C $HOME
-          cd $HOME/cfitsio-3.49
-          ./configure --prefix=/usr/local --enable-reentrant --disable-curl
-          make shared
-          sudo make install
-          wget --quiet --output-document - https://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.20.tar.gz | tar -xz -C $HOME
-          cd $HOME/fitsverify-4.20
-          gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -lcfitsio
-          sudo cp fitsverify /usr/local/bin
+          conda install -c conda-forge fitsverify
       - name: Install Python dependencies
+        shell: bash -l {0}
         run: |
           pip install roman-datamodels
           pip install git+https://github.com/spacetelescope/jwst
@@ -55,4 +54,5 @@ jobs:
           pip install .[submission,test,docs,synphot]
           ./setup_test_cache $CRDS_TEST_ROOT
       - name: Run tests
+        shell: bash -l {0}
         run: ./runtests --cover
