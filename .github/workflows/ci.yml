@@ -45,18 +45,8 @@ jobs:
         shell: bash -l {0}
         if: ${{ contains(matrix.runs-on,'macos') }}
         run: |
-          brew update
+          brew tap larrybradley/homebrew-astro
           brew install fitsverify
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          activate-environment: crds
-        if: ${{ contains(matrix.runs-on,'windows') }}
-      - name: Install fitsverify for Windows
-        shell: bash -l {0}
-        if: ${{ contains(matrix.runs-on,'windows') }}
-        run: |
-          conda install -c conda-forge fitsverify
       - name: Install Python dependencies
         shell: bash -l {0}
         run: |
