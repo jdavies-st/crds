@@ -21,12 +21,12 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
-          # - macos-latest
+          - macos-latest
           - windows-latest
         python-version:
           - "3.8"
           - "3.9"
-          - "3.10"
+          # - "3.10"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -47,11 +47,16 @@ jobs:
         run: |
           brew update
           brew install fitsverify
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          activate-environment: crds
+        if: ${{ contains(matrix.runs-on,'windows') }}
       - name: Install fitsverify for Windows
         shell: bash -l {0}
         if: ${{ contains(matrix.runs-on,'windows') }}
         run: |
-          choco install fitsverify
+          conda install -c conda-forge fitsverify
       - name: Install Python dependencies
         shell: bash -l {0}
         run: |
