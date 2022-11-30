@@ -35,15 +35,23 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          activate-environment: crds
-      - name: Bash
+      - name: Install fitsverify for Ubuntu
         shell: bash -l {0}
+        if: ${{ contains(matrix.runs-on,'ubuntu') }}
         run: |
-          conda install -c conda-forge fitsverify
+          sudo apt-get update
+          sudo apt-get install fitsverify
+      - name: Install fitsverify for MacOS
+        shell: bash -l {0}
+        if: ${{ contains(matrix.runs-on,'macos') }}
+        run: |
+          brew update
+          brew install fitsverify
+      - name: Install fitsverify for Windows
+        shell: bash -l {0}
+        if: ${{ contains(matrix.runs-on,'windows') }}
+        run: |
+          choco install fitsverify
       - name: Install Python dependencies
         shell: bash -l {0}
         run: |
